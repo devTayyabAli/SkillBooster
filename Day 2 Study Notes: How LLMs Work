@@ -1,0 +1,56 @@
+1. Tokens & Context Window
+Think of tokens as the "currency" of an LLM. Instead of reading word-for-word, the AI breaks text into chunks (about 4 characters or 0.75 words per token).
+
+Context Window: This is the AI's "working memory." If a book is 100,000 tokens and the model's window is only 32,000, it literally cannot "see" the beginning of the book by the time it reaches the end.
+
+The Fade: When you have a very long conversation, the earliest messages eventually fall out of this window, which is why the AI might "forget" your name or a previous instruction.
+
+2. Temperature & Top-p
+These are your "creativity dials." Behind the scenes, the AI generates a list of possible next words, each with a probability percentage.
+
+Temperature: * Low (0.1–0.4): The AI almost always picks the #1 most likely word. Great for coding or facts.
+
+High (0.7–1.0+): The AI takes risks on less likely words. Great for poetry or brainstorming.
+
+Top-p (Nucleus Sampling): This limits the "pool" of words. If Top-p is 0.9, the AI only considers the top group of words whose cumulative probability adds up to 90%, cutting off the "weird" bottom 10%.
+
+
+
+3. Why Models Hallucinate
+An LLM is essentially "Autocomplete on steroids." It doesn't have a source of truth; it has a source of probability.
+
+Hallucinations occur because:
+
+Statistical Overconfidence: It finds a word pattern that sounds right, even if the facts are wrong.
+
+Compressed Knowledge: It remembers the vibe of a fact but not the specific detail.
+
+Instruction Following: If you ask a leading question ("Why did George Washington invent the internet?"), the AI might try so hard to be helpful that it "hallucinates" a justification.
+
+
+Task: The Redis Experiment
+To see these concepts in action, let's run the two versions of the "Redis" prompt.
+
+Version A: Low Temperature (The "Strict" Instructor)
+Prompt: "Explain Redis caching in simple terms. Be highly literal, use bullet points, and do not use metaphors. Focus only on technical utility."
+
+Redis is an in-memory data structure store.
+
+It is used as a database, cache, and message broker.
+
+It stores data in RAM (Random Access Memory) rather than on a traditional disk (HDD/SSD).
+
+Data retrieval from RAM is significantly faster than retrieval from a disk.
+
+It reduces the load on primary databases by storing frequently accessed query results.
+
+Version B: High Temperature (The "Creative" Instructor)
+Prompt: "Explain Redis caching in simple terms. Be wild, creative, and use a fun analogy. Feel free to be expressive!"
+
+"Imagine your computer’s main database is a massive, dusty library located five miles away. Every time you want to know a fact, you have to put on your shoes, hike through the rain, and find the right shelf. Redis is like having a sticky note stuck to your forehead. It’s right there! It’s instant! It’s the 'VIP lounge' for your data where the most popular information gets to hang out and wait for you, so you don't have to do the 'Database Marathon' every five seconds. It's basically caffeine for your app's memory!"
+
+What to Observe:
+Vocabulary: Version A uses technical terms (RAM, data structure). Version B uses evocative language (VIP lounge, sticky note).
+
+Structure: The strict instructions forced a logical list, while the loose instructions allowed for a narrative flow.
+
